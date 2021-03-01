@@ -1,0 +1,45 @@
+
+command input:
+    1. command is a 10 character buffer. When the user input is read from the keyboard with scanf, this 10 character constrint is not validated, resulting in a buffer overflow vulnerability. scanf_s should be used instead.
+    2. 
+
+register command:
+    1. When a register command is issued both username and password are printed on screen in clear, making it easy to steal the person's account. Too much information given to the user, this print statement should be removed.
+    2. arg1 and arg2 are 2 buffers of maximum MAX_PATH (260) characters. This constraint (for the username and password to be <= 259 (260 - 1 for the 0 at the end of the string) characters) is never checked, resulting in a buffer overflow vulnerability. scanf_s should be used instead.
+    3. SafeStorageHandleRegister is called with (USHORT)strlen(arg1) and (USHORT)strlen(arg2), this is an integer overflow vulnerability. The length of the username and password should be checked and restricted to a maximum number of characters. strnlen_s should be used instead of the unsafe method strlen.
+    4. The return status of SafeStorageHandleRegister is never checked. Altough i don't see any vulnerability in this issue besides the fact that the user migh not be informed of a potential fail/success of the called method, it should be done for the sake of code-integrity.
+    5. The printf is susceptible to exploits due to the printing of unsanitized/unchecked inputs
+
+login command:
+    1. When a login command is issued both username and password are printed on screen in clear, making it easy to steal the person's account. Too much information given to the user, this print statement should be removed.
+    2. arg1 and arg2 are 2 buffers of maximum MAX_PATH (260) characters. This constraint (for the username and password to be <= 259 (260 - 1 for the 0 at the end of the string) characters) is never checked, resulting in a buffer overflow vulnerability. scanf_s should be used instead.
+    3. SafeStorageHandleLogin is called with (USHORT)strlen(arg1) and (USHORT)strlen(arg2), this is an integer overflow vulnerability. The length of the username and password should be checked and restricted to a maximum number of characters. strnlen_s should be used instead of the unsafe method strlen.
+    4. The return status of SafeStorageHandleLogin is never checked. Altough i don't see any vulnerability in this issue besides the fact that the user migh not be informed of a potential fail/success of the called method, it should be done for the sake of code-integrity.
+    5. The printf is susceptible to exploits due to the printing of unsanitized/unchecked inputs
+
+logout command:
+    1. The return status of SafeStorageHandleLogout is never checked. Altough i don't see any vulnerability in this issue besides the fact that the user migh not be informed of a potential fail/success of the called method, it should be done for the sake of code-integrity.
+    2.
+
+store command:
+    1. arg1 and arg2 are 2 buffers of maximum MAX_PATH (260) characters. This constraint (for the username and password to be <= 259 (260 - 1 for the 0 at the end of the string) characters) is never checked, resulting in a buffer overflow vulnerability. scanf_s should be used instead.
+    2. SafeStorageHandleStore is called with (USHORT)strlen(arg1) and (USHORT)strlen(arg2), this is an integer overflow vulnerability. The length of the username and password should be checked and restricted to a maximum number of characters. strnlen_s should be used instead of the unsafe method strlen.
+    3. The return status of SafeStorageHandleStore is never checked. Altough i don't see any vulnerability in this issue besides the fact that the user migh not be informed of a potential fail/success of the called method, it should be done for the sake of code-integrity.
+    4. The printf is susceptible to exploits due to the printing of unsanitized/unchecked inputs
+
+retrieve command:
+    1. arg1 and arg2 are 2 buffers of maximum MAX_PATH (260) characters. This constraint (for the username and password to be <= 259 (260 - 1 for the 0 at the end of the string) characters) is never checked, resulting in a buffer overflow vulnerability. scanf_s should be used instead.
+    2. SafeStorageHandleRetrieve is called with (USHORT)strlen(arg1) and (USHORT)strlen(arg2), this is an integer overflow vulnerability. The length of the username and password should be checked and restricted to a maximum number of characters. strnlen_s should be used instead of the unsafe method strlen.
+    3. The return status of SafeStorageHandleRetrieve is never checked. Altough i don't see any vulnerability in this issue besides the fact that the user migh not be informed of a potential fail/success of the called method, it should be done for the sake of code-integrity.
+    4. The printf is susceptible to exploits due to the printing of unsanitized/unchecked inputs
+
+exit command:
+    1. The current implementation allows an user to exit the application without loging out first. This is a problem, as the user can remain login in the application and an unauthorised actor could submit/retrieve files in his/her name if it has access to the user's machine. SafeStorageHandleLogout should be called when an exit command is issued, if it wasn't previously called.
+    2. 
+
+other:
+    1. Neither arg1 nor arg2 buffers are cleared after a login/register operation. This means critical information (such as passwords/usernames) will reside in memory and will be prone to information leakeage. They should be erased after such an operation as a mean of prevention.
+    2. Command, arg1 and arg2 should be initialized with 0.
+    3. All methods return values are ignored. They should be checked for NTSUCCESS status.
+    4.
+

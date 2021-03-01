@@ -1,0 +1,5 @@
+[31-Dec-2020 15:52:27 Europe/Helsinki] PHP Notice:  Undefined index: login_tries in /mnt/d/master/psncs/php/student_delivery.php on line 42
+[31-Dec-2020 15:52:27 Europe/Helsinki] PHP Notice:  Undefined index: login_tries in /mnt/d/master/psncs/php/student_delivery.php on line 157
+[31-Dec-2020 15:52:27 Europe/Helsinki] PHP Notice:  Undefined index: login_tries in /mnt/d/master/psncs/php/student_delivery.php on line 158
+[31-Dec-2020 15:52:31 Europe/Helsinki] PHP Notice:  Undefined index: login_timer in /mnt/d/master/psncs/php/student_delivery.php on line 44
+[31-Dec-2020 15:54:52 Europe/Helsinki] PHP Notice:  Undefined index: message_timer in /mnt/d/master/psncs/php/student_delivery.php on line 26

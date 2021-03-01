@@ -1,0 +1,124 @@
+function query_db_login:
+------------------------
+0. 
+(Possible) Vulnerability (if the frontend and backend are decoupled): Username and password are sent uncrypted from frontend to backend "username=cristi&password=parola". This is vulnerable to man in the middle attacks. 
+Mitigation: Use POST instead of GET or encrypt username and password before sending.
+
+1. 
+Vulnerability: Vulnerable to sql injection. 
+Mitigation: Input parameters (username and password) have to be validated and sanitized before using them in the database query.
+
+2. 
+Vulnerability: Vulnerable to brute-force attacks.
+Mitigation: Request IPs must be tracked and time-out-ed if too many failed attempts are performed.
+
+3. 
+Vulnerability: Vulnerable to DDOS attacks.
+Mitigation: Same as before, Request IPs must be tracked and blacklisted if too many failed attempts are performed.
+
+
+function get_message_rows:
+--------------------------
+1. 
+Vulnerability: Unauthorised access. If the server is not configured propperly, unauthorised users would be able to view the messages in the live chat. 
+Mitigation: Configure the server propperly. Check if the user is loged in before querying the db.
+
+
+function add_message_for_user:
+------------------------------
+1. 
+Vulnerability: Sql injection. Username and message parameters are used as is in order to compose the sql query. This could lead to an sql injection attack.
+Mitigation: Validate that neither the username nor the message contain special characters that could lead to such a situation.
+
+2.
+Vulnerability: Xss persistent injection. The message could contain special characters that, when loaded into an html page would be interpreted by the browser as javascript/php/whatever code.
+Mitigation: Validate that the message doesn't contain special characters that could lead to such a situation.
+
+3.
+Vulnerability: Impersonation.
+Mitigation: Check that the browser session cookie contains the same name as the one passed as argument and the user is logged in.
+
+4. 
+Vulnerability: Spam. An user could spam the DB with dummy messagess, fill the DB/Hard disk and as a result threatening the application's accesability. 
+Mitigation: Restrict the number of messages an user can send in a unit of time.
+
+5. 
+Vulnerability: Social engineering attacks. As this is a chat users could try to fool other users into sending them valuable information. (The classic prince of Nigeria scheme for example)
+Mitigation: Create a model that analyses chat messages and detects such attacks.
+
+
+function is_valid_image:
+------------------------
+Nada
+
+
+function add_photo_path_to_user:
+--------------------------------
+1. 
+Vulnerability: Sql injection. Username and file_userphoto parameters are used as is in order to compose the sql query. This could lead to an sql injection attack.
+Mitigation: Validate that neither the username nor the file_userphoto contain special characters that could lead to such a situation.
+
+2.
+Vulnerability: file_userphoto leads to another file rather than a photo.
+Mitigation: Check that file_userphoto is in fact a picture.
+
+3.
+Vulnerability: Impersonation.
+Mitigation: Check that the browser session cookie contains the same name as the one passed as argument and the user is logged in.
+
+
+function get_photo_path_for_user:
+---------------------------------
+1. 
+Vulnerability: Sql injection. Username is used as is in order to compose the sql query. This could lead to an sql injection attack.
+Mitigation: Validate that the username does not contain special characters that could lead to such a situation.
+
+2.
+Vulnerability: Impersonation.
+Mitigation: Check that the browser session cookie contains the same name as the one passed as argument and the user is logged in.
+
+3.
+Vulnerability: TOCTOU. The stored path to the picture could (due to a faulty server configuration) have been replaced with a symlink or whatever to point to a file that is in fact not a picture.
+Mitigation: Check that the stored path is still a picture.
+
+4.
+Vulnerability: Impersonation.
+Mitigation: Check that the browser session cookie contains the same name as the one passed as argument and the user is logged in.
+
+
+function get_memo_content_for_user:
+-----------------------------------
+1. 
+Vulnerability: Metacharacter injection. The memoname or username could contain characters interpreted by the OS in such a way that the composed path could lead to files that shouldn't be available to the user.
+Mitigation: Check that neither username nor memoname contain such characters.
+
+2.
+Vulnerability: Impersonation.
+Mitigation: Check that the browser session cookie contains the same name as the one passed as argument and the user is logged in.
+
+
+function get_language_php:
+--------------------------
+1. Evaluate the impact of 'get_language_php' by explaining what are the risks of this function's default implementation
+        (the one you received) by answering the following questions:
+            - What is the vulnerability present in this function?
+            The input is not validated nor sanitized, making it vulnerable to a metacharacter exploit. I.e. "http://localhost/index.php?language=../users/cristi/oh_no"
+            - What other vulnerability can be chained with this vulnerability to inflict damage on the web application and where is it present?
+            The above-mentioned vulnerability could be chained with the ability of the user to upload any type of files (as memos) without the system performing a check if they contain code instead of just memos.
+            (I.e. the hacker could upload "oh_no.php" as a memo)
+            - What can the attacker do once he chains the two vulnerabilities?
+            These two vulnerabilities chained together grant a hacker remote code execution privilleges on the server. 
+            (I.e. when the "http://localhost/index.php?language=../users/cristi/oh_no" path is accessed, the attacker's "oh_no.php" file is ready to be executed *https://www.youtube.com/watch?v=6TUeUL7EW9M&ab_channel=davstern1500* ) 
+            - As a result an atacker could leak any information on the system (lack of Confidentiality of the system)
+            - As a result an atacker could rewrite generic user's data alongside with any other data on the system (lack of Integrity of the system)
+            - As a result an atacker could brick the system permanently (lack of Accesability of the system)
+        After that, modify the get_language_php function to no longer present a security risk.
+
+2. 
+Vulnerability: Metacharacter injection. The language parameter could contain characters interpreted by the OS in such a way that the composed path could lead to files that shouldn't be available to the user to be read.
+Mitigation: Check that the language parameter does not contain such characters.
+
+Other:
+------
+1. A user can upload files into his/her folder. This ability can be abused by a bot in order to fill the memory of the server this representing a kind of DOS attack.
+2. The Apache server should be carefully configured in order to prevent unauthorised file reads by engineering the url to the user's directory. Also it should not permit Cross-Refference accesses.
