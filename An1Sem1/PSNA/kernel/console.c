@@ -25,6 +25,7 @@ void HandleConsoleInput(char* buff)
     else if (strcmp_custom(buff, "READSECTOR") == 0)
     {
         QWORD readAddress = ReadSector(0,0,0);
+        __magic();
         char address[17];
 
         Log("Cylinder Head Sector 0 0 0 read to: ");
@@ -41,6 +42,7 @@ void HandleConsoleInput(char* buff)
                 address[16 - i] = address[16 - i] + '0';
             }
         }
+        address[16] = 0;
 
         PutString(address);
 

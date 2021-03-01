@@ -2,7 +2,7 @@
 #define _KEYBOARD_H_
 
 void
-KeyboardDriverInit();
+KeyboardDriverInit(void (*HandleEnterCallback)(char*));
 
 void
 KeyboardDriver();

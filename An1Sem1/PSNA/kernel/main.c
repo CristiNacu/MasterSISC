@@ -51,6 +51,8 @@ typedef struct _BOOT_STRUCTURE {
 
 } BOOT_STRUCTURE;
 
+///  0x50000   0x51000   0x52000  0x53000
+///   |.........|.........| .......|
 
 void KernelMain(BOOT_STRUCTURE *BootStructure)
 {

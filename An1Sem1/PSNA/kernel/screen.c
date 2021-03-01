@@ -76,13 +76,15 @@ void HelloBoot()
     CursorPosition(i);
 }
 
+/// 0x000B8000      |   
+
 void ClearScreen()
 {
     unsigned int i;
 
     for (i = 0; i < MAX_OFFSET; i++)
     {
-        gVideo[i].color = 0;
+        gVideo[i].color = 0x33;
         gVideo[i].c = ' ';
     }
 
