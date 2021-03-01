@@ -1,11 +1,12 @@
 #include "disk.h"
 #include "physical_memory_manager.h"
 
-#define HEAD_PORT               0x1F6
+#define SECTOR_DISK_DATA        0x1F0
 #define SECTOR_COUNT_PORT       0x1F2
 #define SECTOR_NUMBER_PORT      0x1F3
 #define SECTOR_CYL_LOW_PORT     0x1F4
 #define SECTOR_CYL_HIGH_PORT    0x1F5
+#define HEAD_PORT               0x1F6
 #define DISK_COMMAND_PORT       0x1F7
 
 #define READ_WITH_RETRY_COMMAND 0x20
@@ -16,7 +17,7 @@ QWORD ReadSector(BYTE Cylinder, BYTE Head, BYTE Sector)
 {
     QWORD address = AllocNewPage();
 
-    BYTE headPortValue = Head & 0xF | 0xA;
+    BYTE headPortValue = Head & 0xF | 0xA0;
     __out(HEAD_PORT, headPortValue);
 
     __out(SECTOR_COUNT_PORT, 1);
@@ -31,10 +32,10 @@ QWORD ReadSector(BYTE Cylinder, BYTE Head, BYTE Sector)
 
     for (int i = 0; i < 256; i++)
     {
-        WORD sectorWord = __inword(0x1F0);
+        WORD sectorWord = __inword(SECTOR_DISK_DATA);
         buffer[i] = sectorWord;
     }
 
     return address;
-
+    
 }

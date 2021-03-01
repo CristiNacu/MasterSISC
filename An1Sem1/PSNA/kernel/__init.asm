@@ -61,8 +61,8 @@ KILO                            equ     1024
 MEGA                            equ     (1024 * (KILO))
 GIGA                            equ     (1024 * (MEGA))
 
-TOP_OF_STACK                    equ 0x200000
-KERNEL_BASE_PHYSICAL            equ 0x200000
+TOP_OF_STACK                    equ 0x20_0000
+KERNEL_BASE_PHYSICAL            equ 0x20_0000
 ;;-----------------^DEFINITIONS ONLY^-----------------------
 
 
@@ -88,7 +88,7 @@ ASMEntryPoint:
     mov     fs, ax
     mov     gs, ax
     mov     ss, ax
-
+    
     jmp     0x18:ReloadGdt
     ReloadGdt:
 

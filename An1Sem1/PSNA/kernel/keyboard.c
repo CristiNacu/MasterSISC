@@ -141,16 +141,16 @@ void KeyboardDriver()
     char pressed = (c & (BYTE)0x80) != 0;
     char decoded = DecodeKey(c);
 
-    if (decoded == ENTER && gHandleEnter)
+    if (decoded == ENTER && gHandleEnter && !pressed)
     {
         Log("Enter encountered\n");
         gHandleEnter(gKeyboardBuffer);
-        ClearCommandPortion();
         for (int i = 0; i <= MAX_KEYBORD_BUFFER_LEN; i++)
         {
             KeyboardBuffer[i] = 0;
         }
         crtWritingPosition = 0;
+        ClearCommandPortion();
     }
     else if (decoded != UNKNOWN && !pressed && crtWritingPosition < c)
     {

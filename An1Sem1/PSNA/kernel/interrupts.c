@@ -234,10 +234,6 @@ void InitInterrupts()
 
     __lidt(&idtStructure);
     Log("Init interrupts ok\n");
-    if(DEBUG_INTERRUPTS)
-        // generate a page fault
-        ((BYTE*)(0xA000000000))[0] = 1;
-    
 
     RemapPicInterrupts(0x28, 0x30);
     return;
